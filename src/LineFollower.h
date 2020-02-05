@@ -17,6 +17,7 @@ public:
     void loop() {
         if (interval.isReady()) {
             sensors.read();
+            int state = sensors.getState();
         }
     }
 

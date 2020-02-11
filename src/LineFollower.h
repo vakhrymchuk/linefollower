@@ -7,6 +7,10 @@
 class LineFollower {
 public:
     static const int INTERVAL = 10;
+    static const int MAX_SPEED = 50; // percentage
+
+    static constexpr double PID_P = 0.25;
+    static constexpr double PID_D = 6;
 
 private:
 
@@ -14,17 +18,23 @@ private:
     Sensors sensors = Sensors();
     Mechanics mechanics = Mechanics();
 
+    int lastError = 0;
+
 public:
 
     void loop() {
         if (interval.isReady()) {
+
             sensors.read();
-            int state = sensors.getState();
-            if (state > -300 && state < 300) {
-                mechanics.run(100, 100);
-            } else {
-                mechanics.run(0, 0);
-            }
+
+            int error = sensors.getState();
+            int16_t speedDifference = PID_P * error + PID_D * (error - lastError);
+            lastError = error;
+
+            int16_t leftSpeed = constrain(MAX_SPEED + speedDifference, 0, MAX_SPEED);
+            int16_t rightSpeed = constrain(MAX_SPEED - speedDifference, 0, MAX_SPEED);
+
+            mechanics.run(leftSpeed, rightSpeed);
         }
     }
 

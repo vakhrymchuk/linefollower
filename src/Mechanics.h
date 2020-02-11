@@ -4,6 +4,7 @@
 
 class Mechanics {
 public:
+    static const int MAX_SPEED = 150;
 
 private:
     Motor leftMotor = Motor(9);
@@ -11,9 +12,9 @@ private:
 
 public:
 
-    void run(byte leftSpeed, byte rightSpeed) {
-        leftMotor.run(leftSpeed);
-        rightMotor.run(rightSpeed);
+    void run(byte leftSpeedPercentage, byte rightSpeedPercentage) {
+        leftMotor.run(leftSpeedPercentage * 0.01 * MAX_SPEED);
+        rightMotor.run(rightSpeedPercentage * 0.01 * MAX_SPEED);
     }
 
 private:

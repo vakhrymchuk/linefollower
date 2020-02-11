@@ -11,8 +11,8 @@ public:
         run(0);
     }
 
-    void run(byte speed) {
-        analogWrite(pin, speed);
+    void run(byte pwm) {
+        analogWrite(pin, pwm);
     }
 
 private:

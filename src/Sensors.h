@@ -5,10 +5,10 @@ public:
     static const int SENSORS_COUNT = 8;
     static const int SENSORS_ARRAY_ADDRESS = 9;
     static const int SENSORS_MAX_VALUE = 255;
-    static const int SENSORS_LINE_THRESHOLD = 150;
+    static const int SENSORS_LINE_THRESHOLD = 127;
 
     static const int8_t STATE_COEF[];
-    static const int STATE_MAX_VALUE = SENSORS_MAX_VALUE * SENSORS_COUNT / 2;
+    static const int STATE_MAX_VALUE = 100;
 
 private:
     byte data[SENSORS_COUNT];
@@ -17,19 +17,28 @@ private:
 public:
 
     /**
-     * Read values from sensors. >200 - white, <100 - black line
+     * Read values from sensors. >SENSORS_LINE_THRESHOLD - black line
      */
     void read() {
-        uint8_t size = Wire.requestFrom(SENSORS_ARRAY_ADDRESS, 16);
+        Wire.requestFrom(SENSORS_ARRAY_ADDRESS, 16);
         byte t = 0;
         while (Wire.available()) {
             int b = Wire.read();
             if (t < SENSORS_COUNT) {
-                data[t] = b;
+                data[t] = SENSORS_MAX_VALUE - b;
                 Wire.read();
             }
             t++;
         }
+//        for (const auto &item : data) {
+//            Serial.print(item);
+//            Serial.print(' ');
+//        }
+//        Serial.print("    state = ");
+//        Serial.print(getState());
+//        Serial.print("    online = ");
+//        Serial.print(isOnLine());
+//        Serial.println();
     }
 
     bool isOnLine() {
@@ -42,22 +51,25 @@ public:
     }
 
     /**
-     * @return state from -1020 to 1020 value
+     * @return state from -STATE_MAX_VALUE to STATE_MAX_VALUE value divided by 100
      */
     int getState() {
         if (isOnLine()) {
+            state = 0;
             for (byte i = 0; i < SENSORS_COUNT; i++) {
                 state += STATE_COEF[i] * data[i];
             }
+            state /= 100;
         } else {
-            state = state * STATE_MAX_VALUE;
+            state = state * 2;
         }
 
-        return constrain(state, -STATE_MAX_VALUE, STATE_MAX_VALUE);
+        state = constrain(state, -STATE_MAX_VALUE, STATE_MAX_VALUE);
+        return state;
     }
 
 private:
 
 };
 
-const int8_t Sensors::STATE_COEF[] = {-4, -3, -2, -1, 1, 2, 3, 4};
+const int8_t Sensors::STATE_COEF[] = {-16, -8, -4, -1, 1, 4, 8, 16};

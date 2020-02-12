@@ -46,7 +46,7 @@ public:
                 timeout.start(1000);
             }
 
-            sensors.read();
+            sensors.readCalibrated();
 
             int error = sensors.getState();
             int speedDifference = PID_P * error + PID_D * (error - lastError);
@@ -59,6 +59,22 @@ public:
 //        }
     }
 
-private:
+    void calibrate() {
+        do {
+            mechanics.run(80, -80);
+            sensors.calibrate();
+            delay(10);
+        } while (sensors.getState() > -100);
+        do {
+            mechanics.run(-80, 80);
+            sensors.calibrate();
+            delay(10);
+        } while (sensors.getState() < 100);
+        do {
+            mechanics.run(60, 0);
+            sensors.calibrate();
+            delay(10);
+        } while (sensors.getState() > 0);
+    }
 
 };

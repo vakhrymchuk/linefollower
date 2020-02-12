@@ -12,6 +12,8 @@ public:
 
 private:
     byte data[SENSORS_COUNT];
+    byte minReading[SENSORS_COUNT] = {255, 255, 255, 255, 255, 255, 255, 255};
+    byte maxReading[SENSORS_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
     int state = 0;
 
 public:
@@ -29,6 +31,15 @@ public:
                 Wire.read();
             }
             t++;
+        }
+    }
+
+    void readCalibrated() {
+        read();
+
+        for (byte i = 0; i < SENSORS_COUNT; i++) {
+            long newValue = map(data[i], minReading[i], maxReading[i], 0, SENSORS_MAX_VALUE);
+            data[i] = constrain(newValue, 0, SENSORS_MAX_VALUE);
         }
     }
 
@@ -78,6 +89,18 @@ public:
 
         state = constrain(state, -STATE_MAX_VALUE, STATE_MAX_VALUE);
         return state;
+    }
+
+    void calibrate() {
+        read();
+        for (int i = 0; i < SENSORS_COUNT; i++) {
+            if (data[i] < minReading[i]) {
+                minReading[i] = data[i];
+            }
+            if (data[i] > maxReading[i]) {
+                maxReading[i] = data[i];
+            }
+        }
     }
 
 private:

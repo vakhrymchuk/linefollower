@@ -16,6 +16,7 @@ void setup() {
     lineFollower = new LineFollower();
     delay(500);
     lineFollower->start();
+    lineFollower->calibrate();
 }
 
 

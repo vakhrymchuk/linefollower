@@ -11,7 +11,8 @@ public:
         run(0);
     }
 
-    void run(byte pwm) {
+    void run(int pwm) const {
+        pwm = constrain(pwm, 0, 255);
         analogWrite(pin, pwm);
     }
 

@@ -8,7 +8,7 @@ public:
     static const int SENSORS_LINE_THRESHOLD = 127;
 
     static const int8_t STATE_COEF[];
-    static const int STATE_MAX_VALUE = 100;
+    static const int STATE_MAX_VALUE = 255;
 
 private:
     byte data[SENSORS_COUNT];
@@ -30,15 +30,18 @@ public:
             }
             t++;
         }
-//        for (const auto &item : data) {
-//            Serial.print(item);
-//            Serial.print(' ');
-//        }
-//        Serial.print("    state = ");
-//        Serial.print(getState());
-//        Serial.print("    online = ");
-//        Serial.print(isOnLine());
-//        Serial.println();
+    }
+
+    void out() {
+        for (const auto &item : data) {
+            Serial.print(item);
+            Serial.print(' ');
+        }
+        Serial.print("    state = ");
+        Serial.print(getState());
+        Serial.print("    online = ");
+        Serial.print(isOnLine());
+        Serial.println();
     }
 
     bool isOnLine() {
@@ -59,7 +62,7 @@ public:
             for (byte i = 0; i < SENSORS_COUNT; i++) {
                 state += STATE_COEF[i] * data[i];
             }
-            state /= 100;
+            state = state / 8;
         } else {
             state = state * 2;
         }
@@ -72,4 +75,4 @@ private:
 
 };
 
-const int8_t Sensors::STATE_COEF[] = {-16, -8, -4, -1, 1, 4, 8, 16};
+const int8_t Sensors::STATE_COEF[] = {-4, -3, -2, -1, 1, 2, 3, 4};

@@ -15,11 +15,11 @@ private:
 
 public:
 
-    void run(byte leftSpeedPerc, byte rightSpeedPerc) {
+    void run(int leftSpeed, int rightSpeed) {
 
         double batteryVoltage = battery.readVoltage();
 //        Serial.print("v = ");
-//        Serial.println(batteryVoltage);
+//        Serial.print(batteryVoltage);
         if (batteryVoltage < MIN_ALLOWED_BATTERY_VOLTAGE) {
             leftMotor.run(0);
             rightMotor.run(0);
@@ -27,11 +27,11 @@ public:
         }
 
         int maxPwm = (int) (255 * MAX_ALLOWED_MOTOR_VOLTAGE / batteryVoltage);
-//        Serial.print("maxPwm = ");
-//        Serial.println(maxPwm);
+//        Serial.print(" maxPwm = ");
+//        Serial.print(maxPwm);
 
-        leftMotor.run(leftSpeedPerc * 0.01 * maxPwm);
-        rightMotor.run(rightSpeedPerc * 0.01 * maxPwm);
+        leftMotor.run(constrain(leftSpeed, 0, maxPwm));
+        rightMotor.run(constrain(rightSpeed , 0, maxPwm));
     }
 
 private:

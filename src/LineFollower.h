@@ -1,19 +1,16 @@
 #pragma once
 
 #include <Interval.h>
+#include <Timeout.h>
 #include "Sensors.h"
 #include "Mechanics.h"
 
 class LineFollower {
 public:
-    static const int INTERVAL = 10;
+    static const int INTERVAL = 1;
 
-    static constexpr double PID_P = 7.0;
-    static constexpr double PID_D = 18.0;
-    // 40 1.5 5   40 1 2
-    // 45 2 5
-    // 50 4 10 50 4.5 11 50 6 12
-    // 45 7 18
+    static constexpr float PID_P = 1.0;
+    static constexpr float PID_D = 0.0;
 
 private:
 
@@ -21,27 +18,36 @@ private:
     Sensors sensors = Sensors();
     Mechanics mechanics = Mechanics();
 
-    int speed = 45; // percentage
+    int speed = 100;
 
     int lastError = 0;
 
 //    Interval speedUp = Interval(25, SECOND);
 
+    Timeout timeout;
+    int count = 0;
+
 public:
 
     void loop() {
         if (interval.isReady()) {
+            count++;
+            if (timeout.isReady()) {
+                Serial.println(count);
+
+                sensors.out();
+
+                count = 0;
+                timeout.start(1000);
+            }
 
             sensors.read();
 
             int error = sensors.getState();
-            int16_t speedDifference = PID_P * error + PID_D * (error - lastError);
+            int speedDifference = PID_P * error + PID_D * (error - lastError);
             lastError = error;
 
-            int16_t leftSpeed = constrain(speed + speedDifference, 0, 100);
-            int16_t rightSpeed = constrain(speed - speedDifference, 0, 100);
-
-            mechanics.run(leftSpeed, rightSpeed);
+            mechanics.run(speed + speedDifference, speed - speedDifference);
         }
 //        if (speedUp.isReady()) {
 //            speed++;

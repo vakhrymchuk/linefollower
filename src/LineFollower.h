@@ -3,7 +3,7 @@
 #include <Interval.h>
 #include <Timeout.h>
 #include "Sensors.h"
-#include "Mechanics.h"
+#include "hal/tb6612/MechanicsTB6612.h"
 
 class LineFollower {
 public:
@@ -16,9 +16,9 @@ private:
 
     Interval interval = Interval(INTERVAL);
     Sensors sensors = Sensors();
-    Mechanics mechanics = Mechanics();
+    MechanicsTB6612 mechanics = MechanicsTB6612();
 
-    int speed = 100;
+    int speed = 255;
 
     int lastError = 0;
 
@@ -29,7 +29,12 @@ private:
 
 public:
 
+    void start() {
+        mechanics.start();
+    }
+
     void loop() {
+
         if (interval.isReady()) {
             count++;
             if (timeout.isReady()) {

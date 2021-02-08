@@ -53,6 +53,15 @@ public:
         return false;
     }
 
+    bool hasWhite() {
+        for (const auto &item : data) {
+            if (item < SENSORS_LINE_THRESHOLD) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @return state from -STATE_MAX_VALUE to STATE_MAX_VALUE value divided by 100
      */

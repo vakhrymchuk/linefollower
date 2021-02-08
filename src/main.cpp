@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include <ADC.h>
 #include <Wire.h>
+#include <hal/ADC.h>
 #include "LineFollower.h"
 
 static const long FAST_CLOCK = 400000;
@@ -15,6 +15,7 @@ void setup() {
 
     lineFollower = new LineFollower();
     delay(500);
+    lineFollower->start();
 }
 
 

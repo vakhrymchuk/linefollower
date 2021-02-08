@@ -10,11 +10,11 @@ public:
         pinMode(pin, INPUT);
     }
 
-    int read() {
+    int read() const {
         return analogRead(pin);
     }
 
-    double readVoltage() {
+    double readVoltage() const {
         return 5.0 * analogRead(pin) / 1024;
     }
 

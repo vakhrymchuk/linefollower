@@ -5,10 +5,10 @@ public:
     static const int SENSORS_COUNT = 8;
     static const int SENSORS_ARRAY_ADDRESS = 9;
     static const int SENSORS_MAX_VALUE = 255;
-    static const int SENSORS_LINE_THRESHOLD = 127;
+    static const int SENSORS_LINE_THRESHOLD = 100;
 
     static const int8_t STATE_COEF[];
-    static const int STATE_MAX_VALUE = 255;
+    static const int STATE_MAX_VALUE = 1024;
 
 private:
     byte data[SENSORS_COUNT];
@@ -84,4 +84,4 @@ private:
 
 };
 
-const int8_t Sensors::STATE_COEF[] = {-4, -3, -2, -1, 1, 2, 3, 4};
+const int8_t Sensors::STATE_COEF[] = {-6, -4, -2, -1, 1, 2, 4, 6};

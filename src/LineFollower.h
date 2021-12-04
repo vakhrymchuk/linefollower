@@ -9,8 +9,8 @@ class LineFollower {
 public:
     static const int INTERVAL = 1;
 
-    static constexpr float PID_P = 1.0;
-    static constexpr float PID_D = 0.0;
+    static constexpr float PID_P = 0.2;
+    static constexpr float PID_D = 0.4;
 
 private:
 
@@ -18,7 +18,7 @@ private:
     Sensors sensors = Sensors();
     MechanicsTB6612 mechanics = MechanicsTB6612();
 
-    int speed = 255;
+    int speed = 170;
 
     int lastError = 0;
 

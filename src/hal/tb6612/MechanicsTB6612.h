@@ -28,6 +28,8 @@ public:
         if (isLowBattery()) {
             leftMotor.run(0);
             rightMotor.run(0);
+            pinMode(13, OUTPUT);
+            digitalWrite(13, HIGH);
             return;
         }
 

@@ -7,7 +7,7 @@ public:
     static constexpr double MAX_ALLOWED_MOTOR_VOLTAGE = 3.0;
     static constexpr double MIN_ALLOWED_BATTERY_VOLTAGE = 3.3;
 
-private:
+protected:
     Battery battery = Battery(A0);
 
 public:

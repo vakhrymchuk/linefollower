@@ -1,3 +1,5 @@
+//#define DEBUG true
+
 #include <Arduino.h>
 #include <Wire.h>
 #include <hal/ADC.h>
@@ -11,11 +13,17 @@ void setup() {
     ADC_setup();
     Wire.begin();
     Wire.setClock(FAST_CLOCK);
+#ifdef DEBUG
     Serial.begin(115200);
+    Serial.println("Init");
+#endif
 
     lineFollower = new LineFollower();
     delay(500);
     lineFollower->start();
+#ifdef DEBUG
+    Serial.println("Start");
+#endif
 }
 
 

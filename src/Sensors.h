@@ -11,7 +11,7 @@ public:
     static const int STATE_MAX_VALUE = 1024;
 
 private:
-    byte data[SENSORS_COUNT];
+    byte data[SENSORS_COUNT]{};
     int state = 0;
 
 public:
@@ -33,6 +33,7 @@ public:
     }
 
     void out() {
+#ifdef DEBUG
         for (const auto &item : data) {
             Serial.print(item);
             Serial.print(' ');
@@ -42,6 +43,7 @@ public:
         Serial.print("    online = ");
         Serial.print(isOnLine());
         Serial.println();
+#endif
     }
 
     bool isOnLine() {
@@ -73,7 +75,7 @@ public:
             }
             state = state / 8;
         } else {
-            state = state * 2;
+//            state = state * 2;
         }
 
         state = constrain(state, -STATE_MAX_VALUE, STATE_MAX_VALUE);
@@ -84,4 +86,4 @@ private:
 
 };
 
-const int8_t Sensors::STATE_COEF[] = {-6, -4, -2, -1, 1, 2, 4, 6};
+const int8_t Sensors::STATE_COEF[] = {-4, -3, -2, -1, 1, 2, 3, 4};

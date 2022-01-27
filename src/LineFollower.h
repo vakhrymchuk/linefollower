@@ -1,30 +1,29 @@
 #pragma once
 
 #include <Interval.h>
-#include <Timeout.h>
 #include "Sensors.h"
 #include "hal/tb6612/MechanicsTB6612.h"
 
 class LineFollower {
 public:
-    static const int INTERVAL = 1;
+    static const int INTERVAL = 10;
 
-    static constexpr float PID_P = 0.2;
-    static constexpr float PID_D = 0.4;
+    static constexpr float PID_P = 1.5;
+    static constexpr float PID_D = 3;
 
 private:
 
     Interval interval = Interval(INTERVAL);
+    Interval intervalDisplay = Interval(300);
     Sensors sensors = Sensors();
     MechanicsTB6612 mechanics = MechanicsTB6612();
 
-    int speed = 170;
+    int speed = 120;
 
     int lastError = 0;
 
-//    Interval speedUp = Interval(25, SECOND);
+    Interval speedUp = Interval(10, SECOND);
 
-    Timeout timeout;
     int count = 0;
 
 public:
@@ -37,26 +36,38 @@ public:
 
         if (interval.isReady()) {
             count++;
-            if (timeout.isReady()) {
-                Serial.println(count);
-
-                sensors.out();
-
-                count = 0;
-                timeout.start(1000);
-            }
 
             sensors.read();
 
             int error = sensors.getState();
-            int speedDifference = PID_P * error + PID_D * (error - lastError);
+            float speedAdjust = speed / 100.f;
+            float kp = PID_P * speedAdjust;
+            float kd = PID_D * speedAdjust * speedAdjust;
+            int speedDifference = (int) (kp * error + kd * (error - lastError));
             lastError = error;
 
             mechanics.run(speed + speedDifference, speed - speedDifference);
+
+#ifdef DEBUG
+            if (intervalDisplay.isReady()) {
+                Serial.print("FPS: ");
+                Serial.print(count);
+                Serial.print("   error: ");
+                Serial.print(error);
+                Serial.print("   speedDifference: ");
+                Serial.print(speedDifference);
+                Serial.print("   ");
+
+                sensors.out();
+
+                count = 0;
+            }
+#endif
+
         }
-//        if (speedUp.isReady()) {
-//            speed++;
-//        }
+        if (speedUp.isReady()) {
+            speed += 2;
+        }
     }
 
 private:

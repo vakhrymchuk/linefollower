@@ -33,7 +33,7 @@ public:
     }
 
     void out() {
-#ifdef DEBUG
+#ifdef DEBUGLF
         for (const auto &item : data) {
             Serial.print(item);
             Serial.print(' ');

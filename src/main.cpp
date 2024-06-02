@@ -1,4 +1,4 @@
-//#define DEBUG true
+// #define DEBUGLF true
 
 #include <Arduino.h>
 #include <Wire.h>
@@ -11,7 +11,7 @@ LineFollower *lineFollower;
 void setup() {
     Wire.begin();
     Wire.setClock(FAST_CLOCK);
-#ifdef DEBUG
+#ifdef DEBUGLF
     Serial.begin(115200);
     Serial.println("Init");
 #endif
@@ -19,7 +19,7 @@ void setup() {
     lineFollower = new LineFollower();
     delay(500);
     lineFollower->start();
-#ifdef DEBUG
+#ifdef DEBUGLF
     Serial.println("Start");
 #endif
 }

@@ -6,10 +6,10 @@
 
 class LineFollower {
 public:
-    static const int INTERVAL = 10;
+    static const int INTERVAL = 5;
 
     static constexpr float PID_P = 1.5;
-    static constexpr float PID_D = 3;
+    static constexpr float PID_D = 3.0;
 
 private:
 
@@ -21,8 +21,6 @@ private:
     int speed = 120;
 
     int lastError = 0;
-
-    Interval speedUp = Interval(10, SECOND);
 
     int count = 0;
 
@@ -46,7 +44,12 @@ public:
             int speedDifference = (int) (kp * error + kd * (error - lastError));
             lastError = error;
 
-            mechanics.run(speed + speedDifference, speed - speedDifference);
+            int baseSpeed = speed;
+            if (speed + abs(speedDifference) > 255) {
+               baseSpeed = 255 - abs(speedDifference);
+            }
+
+            mechanics.run(baseSpeed + speedDifference, baseSpeed - speedDifference);
 
 #ifdef DEBUG
             if (intervalDisplay.isReady()) {
@@ -64,9 +67,6 @@ public:
             }
 #endif
 
-        }
-        if (speedUp.isReady()) {
-            speed += 2;
         }
     }
 

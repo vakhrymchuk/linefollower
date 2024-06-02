@@ -25,14 +25,6 @@ public:
 
     void run(int leftSpeed, int rightSpeed) override {
 
-        if (isLowBattery()) {
-            leftMotor.run(0);
-            rightMotor.run(0);
-            pinMode(13, OUTPUT);
-            digitalWrite(13, HIGH);
-            return;
-        }
-
         int maxPwm = getMaxPwm();
 
         leftMotor.run(constrain(leftSpeed, -maxPwm, maxPwm));

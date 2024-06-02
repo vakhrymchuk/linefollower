@@ -75,7 +75,7 @@ public:
             }
             state = state / 8;
         } else {
-//            state = state * 2;
+            state = state * 1.1;
         }
 
         state = constrain(state, -STATE_MAX_VALUE, STATE_MAX_VALUE);
@@ -86,4 +86,4 @@ private:
 
 };
 
-const int8_t Sensors::STATE_COEF[] = {-4, -3, -2, -1, 1, 2, 3, 4};
+const int8_t Sensors::STATE_COEF[] = {-6, -4, -2, -1, 1, 2, 4, 6};

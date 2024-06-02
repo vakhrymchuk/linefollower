@@ -2,7 +2,6 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <hal/ADC.h>
 #include "LineFollower.h"
 
 static const long FAST_CLOCK = 400000;
@@ -10,7 +9,6 @@ static const long FAST_CLOCK = 400000;
 LineFollower *lineFollower;
 
 void setup() {
-    ADC_setup();
     Wire.begin();
     Wire.setClock(FAST_CLOCK);
 #ifdef DEBUG
